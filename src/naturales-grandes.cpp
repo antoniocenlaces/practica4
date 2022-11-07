@@ -1,6 +1,6 @@
 ﻿/******************************************************************************\
  * Programación 1. Práctica 4
- * Autores: ------------- ¡PON AQUÍ TU NOMBRE! -------------
+ * Autores: Antonio José González Almela
  * Ultima revisión: 
  * Resumen: Fichero de implementación «naturales-grandes.cpp» de un módulo
  *          denominado «naturales-grandes» para trabajar con números naturales 
@@ -8,6 +8,9 @@
 \******************************************************************************/
 
 #include "naturales-grandes.hpp"
+#include <iostream>
+
+using namespace std; 
 
 /*
  * Pre:  «original» almacena la representación de un número natural. La
@@ -21,7 +24,9 @@
  *       idéntica a la del número natural correspondiente a la de «original».
  */
 void copiar(const unsigned original[], unsigned copia[]) {
-    // Por completar
+    for (unsigned i = 0; i < NUM_DIGITOS; i++) {
+        copia[i] = original[i];
+    }
 }
 
 
@@ -38,7 +43,13 @@ void copiar(const unsigned original[], unsigned copia[]) {
  *       número natural y false en caso contrario.
  */
 bool sonIguales(const unsigned a[], const unsigned b[]) {
-    // Por completar
+    bool iguales;
+    unsigned i = 0;
+    do {
+        iguales = a[i] == b[i];
+        i++;
+    } while (i < NUM_DIGITOS && iguales);
+    return iguales;
 }
 
 
@@ -53,7 +64,18 @@ bool sonIguales(const unsigned a[], const unsigned b[]) {
  *       sin ceros a la izquierda.
  */
 unsigned numCifras(const unsigned natural[]) {
-    // Por completar
+    unsigned i = NUM_DIGITOS;
+    while (i >= 0 && natural[i] == 0) {
+        i--;
+    }
+    // Cuando i > 0 marca la posición del primer dígito distinto de 0
+    if (i > 0) {
+        return i+1;
+    } else if (natural[i] == 0) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 /*
@@ -67,7 +89,15 @@ unsigned numCifras(const unsigned natural[]) {
  *       número natural representado por «natural» (sin ceros a la izquierda).
  */
 void escribirEnPantalla(const unsigned natural[]) {
-    // Por completar
+    unsigned cifras = numCifras(natural);
+    if (cifras > 0){
+        for (unsigned i = cifras - 1; i >= 0; i--) {
+            cout << natural[i];
+        }
+        cout << endl;
+    } else {
+        cout << "0" << endl;
+    }
 }
 
 
