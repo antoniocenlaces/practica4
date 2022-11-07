@@ -9,9 +9,10 @@
 
 #include "naturales-grandes.hpp"
 #include <iostream>
+#include <cmath>
 
 using namespace std; 
-
+const unsigned BASE = 10;
 /*
  * Pre:  «original» almacena la representación de un número natural. La
  *       componente original[0] representa   
@@ -64,18 +65,23 @@ bool sonIguales(const unsigned a[], const unsigned b[]) {
  *       sin ceros a la izquierda.
  */
 unsigned numCifras(const unsigned natural[]) {
-    unsigned i = NUM_DIGITOS;
-    while (i >= 0 && natural[i] == 0) {
+
+    unsigned i = NUM_DIGITOS - 1;
+
+    while (i > 0 && natural[i] == 0) {
         i--;
     }
-    // Cuando i > 0 marca la posición del primer dígito distinto de 0
-    if (i > 0) {
-        return i+1;
-    } else if (natural[i] == 0) {
-        return 0;
-    } else {
-        return 1;
-    }
+    // suponiendo que cuando natural[] sea todo ceros, se cuenta como 1 cifra (el cero)
+    // este bucle no necesita inspeccionar la posición natural[0]
+    return i+1;
+    // Bucle acabado: i <= 0 o bien natural[i] !=0 
+    // if (i > 0) {
+    //     return i+1;
+    // } else if (natural[i] == 0) { 
+    //     return 0;
+    // } else {
+    //     return 1;
+    // }
 }
 
 /*
@@ -90,16 +96,11 @@ unsigned numCifras(const unsigned natural[]) {
  */
 void escribirEnPantalla(const unsigned natural[]) {
     unsigned cifras = numCifras(natural);
-    if (cifras > 0){
-        for (unsigned i = cifras - 1; i >= 0; i--) {
+        for (unsigned i = cifras - 1; i > 0; i--) {
             cout << natural[i];
         }
-        cout << endl;
-    } else {
-        cout << "0" << endl;
-    }
+        cout << natural[0] << endl;
 }
-
 
 /*
  * Pre:  «naturalGrande» tiene «NUM_DIGITOS» componentes.
@@ -111,7 +112,18 @@ void escribirEnPantalla(const unsigned natural[]) {
  *       al dígito más significativo almacenan el valor 0.
  */
 void convertir(const unsigned numero, unsigned naturalGrande[]) {
-    // Por completar
+    unsigned n = numero; // copio el numero recibido en una variable
+    unsigned posicion = 0; // para almacenar la posición de naturalGrande por la que voy
+    naturalGrande[posicion] = n % BASE; // dígito menos significativo
+    n = n / BASE; // elimino de n el dígito menos significativo
+    while (n != 0) {
+        posicion++; // voy a la siguiente posición
+        naturalGrande[posicion] = n % BASE;
+        n = n / BASE;
+    }
+    for (posicion++; posicion < NUM_DIGITOS; posicion++) {
+        naturalGrande[posicion] = 0;
+    }
 }
 
 
@@ -126,7 +138,11 @@ void convertir(const unsigned numero, unsigned naturalGrande[]) {
  * Post: Devuelve el valor numérico del natural almacenado en «naturalGrande».
  */
 unsigned valor(const unsigned naturalGrande[]) {
-    // Por completar
+    unsigned resultado = 0;
+    for (unsigned i = 0; i < numCifras(naturalGrande); i++) {
+        resultado += naturalGrande[i] * unsigned(pow(BASE,i));
+    }
+    return resultado;
 }
 
 
@@ -146,7 +162,22 @@ unsigned valor(const unsigned naturalGrande[]) {
  *       representa las decenas y así sucesivamente.
  */
 void sumar(const unsigned a[], const unsigned b[], unsigned suma[]) {
-    // Por completar
+    const unsigned TALLA_A = numCifras(a);
+    const unsigned TALLA_B = numCifras(b);
+
+    const unsigned TALLA_SUMA = TALLA_A > TALLA_B ? TALLA_A : TALLA_B;
+
+    unsigned acarreo = 0;
+
+    for (unsigned i = 0; i < TALLA_SUMA; i++) {
+        unsigned digitoSuma = a[i] + b[i] + acarreo;
+        suma[i] = digitoSuma % BASE;
+        acarreo = digitoSuma > 9 ? 1 : 0;
+    }
+    suma[TALLA_SUMA] = acarreo;
+    for (unsigned i = TALLA_SUMA + 1; i < NUM_DIGITOS; i++)  {
+        suma[i]=0;
+    }
 }
 
 
@@ -161,7 +192,18 @@ void sumar(const unsigned a[], const unsigned b[], unsigned suma[]) {
  *        del número natural correspondiente a la imagen especular de «natural».
  */
 void calcularImagen(const unsigned natural[], unsigned imagen[]) {
-    // Por completar
+    const unsigned TALLA = numCifras(natural);
+
+    unsigned j = TALLA - 1; // índice para recorrer imagen del final al principio
+
+    for (unsigned i = 0; i < TALLA - 1; i++) {
+        imagen[j] = natural[i];
+        j--; 
+    }
+    imagen[0] = natural[TALLA - 1];
+    for (unsigned i = TALLA; i < NUM_DIGITOS; i++)  {
+        imagen[i]=0;
+    }
 }
 
 
@@ -175,6 +217,13 @@ void calcularImagen(const unsigned natural[], unsigned imagen[]) {
  * Post: Devuelve «true» si y solo si «natural» es un número capicúa.
  */
 bool esCapicua(const unsigned natural[]) {
-    // Por completar
+    unsigned imagen[NUM_DIGITOS] = {0};
+    calcularImagen(natural, imagen);
+
+    if (sonIguales(natural, imagen)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
