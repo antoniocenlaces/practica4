@@ -99,7 +99,7 @@ void escribirEnPantalla(const unsigned natural[]) {
         for (unsigned i = cifras - 1; i > 0; i--) {
             cout << natural[i];
         }
-        cout << natural[0] << endl;
+        cout << natural[0];
 }
 
 /*
