@@ -2,7 +2,8 @@
  * Programación 1. Práctica 4
  * Autores: Antonio José González Almela
  * Ultima revisión: 
- * Resumen: 
+ * Resumen: Programa que pide al usuario un número incial y otro final y 
+ * escribe por pantalla la serie de Fibonacci comprendida entre ellos
 \******************************************************************************/
 
 #include <iostream>
@@ -11,9 +12,12 @@
 using namespace std;
 
 int main() {
-    int numeroInicial;
-    unsigned numeroFinal, contador;
-    bool salirDelPrograma;
+    int numeroInicial; // Primer número solicitado a usuario. Puede ser negativo
+    unsigned numeroFinal, contador; // Segundo número solicitado y contador de números
+                                    // de la serie generados
+    bool salirDelPrograma; // Para controlar cuando salir del bucle de generación de
+                           // números de Fibonacci, o salir del programa si introducen un
+                           // negativo
 
     do {    // Bucle que repite la petición de datos al usuario
             // hasta que introduce 0 o negativo en primer lugar
@@ -42,20 +46,23 @@ int main() {
                 cout << endl;
             }
         }
-        contador = 2;
-        while (!salirDelPrograma && contador < numeroFinal) {
-            unsigned i = 0;
-            while (i < 3 && contador < numeroFinal) {
-                sumar(fibonacci[i % 3], fibonacci[(i + 1) % 3], fibonacci[(i + 2) % 3]);
-                if (contador + 2 > unsigned(numeroInicial)) {
-                    cout << contador + 1 << ". ";
-                    escribirEnPantalla(fibonacci[(i + 2) % 3]);
-                    cout << endl;
-                } 
-                i++;
-                contador++;
-            }
+        contador = 2; // Inicia el bucle de generación Fibonacci siendo la tercera posición
+                      // la primera a generar
+     
+        unsigned i = 0; // Contador circular (0, 1, 2) para colocar el resultado de la suma en una
+                        // posición de fibonacci[] libre
+                        
+        while (!salirDelPrograma && contador < numeroFinal) { // Bucle principal para generar números Fibonacci
+            sumar(fibonacci[i % 3], fibonacci[(i + 1) % 3], fibonacci[(i + 2) % 3]);
+            if (contador + 2 > unsigned(numeroInicial)) {
+                cout << contador + 1 << ". ";
+                escribirEnPantalla(fibonacci[(i + 2) % 3]);
+                cout << endl;
+            } 
+            i = (i + 1) % 3;
+            contador++;
         }
+
     } while (!salirDelPrograma);
 
     return 0;

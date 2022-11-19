@@ -2,7 +2,8 @@
  * Programación 1. Práctica 4
  * Autores: Antonio José González Almela
  * Ultima revisión: 
- * Resumen: 
+ * Resumen: Pide al usuario un número de cifras y encuentra la primera potencia
+ * de 2 que da como resultado un número con las cifras especificadas.
 \******************************************************************************/
 #include <iostream>
 #include "naturales-grandes.hpp"
@@ -11,7 +12,7 @@ using namespace std;
 
 int main() {
     
-    unsigned numero;
+    int numero; // Número solicitado al usuario. Puede ser negativo.
 
     do 
     {   
